@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Apr 26 17:27:41 2019
+Created on Mon May  6 13:49:55 2019
 
 @author: dorad
 """
@@ -9,7 +9,6 @@ Created on Fri Apr 26 17:27:41 2019
 import pygame
 import random
 from os import path
-from pygame import rect
 
 # Estabelece a pasta que contem as figuras.
 img_dir = path.join(path.dirname(__file__), 'Imagens')
@@ -28,7 +27,7 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 
 #Classe Jogador que representa a nave
-class DOTS(pygame.sprite.Sprite):
+class Player(pygame.sprite.Sprite):
     
     #Construtor da classe
     def __init__(self):
@@ -36,51 +35,71 @@ class DOTS(pygame.sprite.Sprite):
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
         
-        # Carregando a imagem.
-        ponto_azul = pygame.image.load(path.join(img_dir, "dot_azul.png")).convert()
-        ponto_rosa = pygame.image.load(path.join(img_dir, "dot_rosa.png")).convert()
-        ponto_amarelo = pygame.image.load(path.join(img_dir, "dot_amarelo.png")).convert()
-        ponto_verde = pygame.image.load(path.join(img_dir, "dot_verde.png")).convert()
+        # Carregando a imagem de fundo.
+        player_img = pygame.image.load(path.join(img_dir, "dot_azul.png")).convert()
 
-        self.azul = ponto_azul
-        self.rosa = ponto_rosa
-        self.amarelo = ponto_amarelo
-        self.verde = ponto_verde
+        self.image = player_img
         
         # Diminuindoo tamanho da imagem.
-        self.azul = pygame.transform.scale(ponto_azul, (50, 50))
-        self.rosa = pygame.transform.scale(ponto_rosa, (50, 50))
-        self.amarelo = pygame.transform.scale(ponto_amarelo, (50, 50))
-        self.verde = pygame.transform.scale(ponto_verde, (50, 50))
+        self.image = pygame.transform.scale(player_img, (50, 50))
         
         # Deixando transparente.
-        self.azul.set_colorkey(WHITE)
-        self.rosa.set_colorkey(WHITE)
-        self.amarelo.set_colorkey(WHITE)
-        self.verde.set_colorkey(WHITE)
+        self.image.set_colorkey(WHITE)
         
         # Detalhes sobre o posicionamento.
-        self.rect_azul = self.azul.get_rect()
-        self.rect_rosa = self.rosa.get_rect()
-        self.rect_amarelo = self.amarelo.get_rect()
-        self.rect_verde = self.verde.get_rect()
+        self.rect = self.image.get_rect()
         
-        # Posicionando.
-        self.rect_azul.centerx = WIDTH / 4
-        self.rect_azul.bottom = HEIGHT - 50
+        # Centraliza embaixo da tela.
+        self.rect.centerx = WIDTH / 4
+        self.rect.bottom = HEIGHT - 50
         
-        self.rect_rosa.centerx = WIDTH /2
-        self.rect_rosa.bottom = HEIGHT - 50
-        
-        self.rect_amarelo.centerx = WIDTH /9
-        self.rect_amarelo.bottom = HEIGHT - 50
-        
-        self.rect_verde.centerx = WIDTH /6
-        self.rect_verde.bottom = HEIGHT - 50
-        
-        # Velocidade do ponto
+        # Velocidade da nave
         self.speedx = 0
         
+    # Metodo que atualiza a posição da navinha
+    def update(self):
+        self.rect.x += self.speedx
+        # Mantem dentro da tela
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+        if self.rect.left < 0:
+            self.rect.left = 0
+            
+    #Bola Rosa
+    def __rosa__(self):
+        
+        # Construtor da classe pai (Sprite).
+        pygame.sprite.Sprite.__rosa__(self)
+        
+        # Carregando a imagem de fundo.
+        player_img = pygame.image.load(path.join(img_dir, "dot_rosa.png")).convert()
+
+        self.image = player_img
+        
+        # Diminuindoo tamanho da imagem.
+        self.image = pygame.transform.scale(player_img, (50, 50))
+        
+        # Deixando transparente.
+        self.image.set_colorkey(WHITE)
+        
+        # Detalhes sobre o posicionamento.
+        self.rect = self.image.get_rect()
+        
+        # Centraliza embaixo da tela.
+        self.rect.centerx = WIDTH / 2
+        self.rect.bottom = HEIGHT - 40
+        
+        # Velocidade da nave
+        self.speedx = 0
+        
+    # Metodo que atualiza a posição da navinha
+    def update(self):
+        self.rect.x += self.speedx
+        # Mantem dentro da tela
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+        if self.rect.left < 0:
+            self.rect.left = 0
 
 #Classe Mob que representa o meteoro
 class Mob(pygame.sprite.Sprite):
@@ -92,11 +111,11 @@ class Mob(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         
         # Carregando a imagem de fundo.
-        ponto_azul = pygame.image.load(path.join(img_dir, "dot_amarelo.png")).convert()
-        self.image = ponto_azul
+        player_img = pygame.image.load(path.join(img_dir, "dot_amarelo.png")).convert()
+        self.image = player_img
         
         # Diminuindoo tamanho da imagem.
-        self.image = pygame.transform.scale(ponto_azul, (50, 50))
+        self.image = pygame.transform.scale(player_img, (50, 50))
         
         # Deixando transparente.
         self.image.set_colorkey(WHITE)
@@ -130,7 +149,7 @@ background = pygame.image.load(path.join(img_dir, 'fundo_cinza.png')).convert()
 background_rect = background.get_rect()
 
 # Cria uma nave.  construtor será chamado automaticamente.
-player = DOTS()
+player = Player()
 
 # Cria o meteoro.
 meteoro = Mob()

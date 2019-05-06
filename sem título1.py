@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Apr 26 17:27:41 2019
+Created on Mon May  6 15:07:57 2019
 
 @author: dorad
 """
@@ -38,9 +38,9 @@ class DOTS(pygame.sprite.Sprite):
         
         # Carregando a imagem.
         ponto_azul = pygame.image.load(path.join(img_dir, "dot_azul.png")).convert()
-        ponto_rosa = pygame.image.load(path.join(img_dir, "dot_rosa.png")).convert()
-        ponto_amarelo = pygame.image.load(path.join(img_dir, "dot_amarelo.png")).convert()
-        ponto_verde = pygame.image.load(path.join(img_dir, "dot_verde.png")).convert()
+        ponto_rosa = pygame.image.loud(path.join(img_dir, "dot_rosa.png")).convert()
+        ponto_amarelo = pygame.image.loud(path.join(img_dir, "dot_amarelo.png")).convert()
+        ponto_verde = pygame.image.loud(path.join(img_dir, "dot_verde.png")).convert()
 
         self.azul = ponto_azul
         self.rosa = ponto_rosa
