@@ -77,9 +77,9 @@ class Bolinhas(pygame.sprite.Sprite):
         
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
-        
+         
         # Carregando a imagem de fundo.
-        sorteio = random.randint(0,1)
+        sorteio = random.randint(0,3)
         player_img = pygame.image.load(path.join(img_dir, cor[sorteio])).convert()
 
         self.image = player_img
