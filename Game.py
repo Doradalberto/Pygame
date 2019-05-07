@@ -294,7 +294,7 @@ all_sprites = pygame.sprite.Group()
 x = 25 
 y = HEIGHT-76
 
-for e in range(10):    
+for e in range(7):    
     for i in range(10):
         a1 = Bolinhas(x, y)
         all_sprites.add(a1)
