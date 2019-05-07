@@ -16,8 +16,8 @@ from os import path
 img_dir = path.join(path.dirname(__file__), 'Imagens')
 
 # Dados gerais do jogo.
-WIDTH = 1400 # Largura da tela
-HEIGHT = 700 # Altura da tela
+WIDTH = 800 # Largura da tela
+HEIGHT = 600 # Altura da tela
 FPS = 60 # Frames por segundo
 
 # Define algumas variáveis com as cores básicas
@@ -66,7 +66,51 @@ class Player(pygame.sprite.Sprite):
             self.rect.right = WIDTH
         if self.rect.left < 0:
             self.rect.left = 0
+ 
+#------------------------------------------------------------------------------------
+class Bolinhas(pygame.sprite.Sprite):
+    
+    
+    #Construtor da classe
+    def __init__(self, x, y):
+        cor = ["dot_rosa.png", "dot_amarelo.png"]
         
+        # Construtor da classe pai (Sprite).
+        pygame.sprite.Sprite.__init__(self)
+        
+        # Carregando a imagem de fundo.
+        sorteio = random.randint(0,1)
+        player_img = pygame.image.load(path.join(img_dir, cor[sorteio])).convert()
+
+        self.image = player_img
+        
+        # Diminuindoo tamanho da imagem.
+        self.image = pygame.transform.scale(player_img, (50, 50))
+        
+        # Deixando transparente.
+        self.image.set_colorkey(WHITE)
+        
+        # Detalhes sobre o posicionamento.
+        self.rect = self.image.get_rect()
+        
+        # Centraliza embaixo da tela.
+        self.rect.x = x
+        self.rect.y = y
+        
+        # Velocidade da nave
+        self.speedx = 0
+        
+    # Metodo que atualiza a posição da navinha
+    def update(self):
+        self.rect.x += self.speedx
+        # Mantem dentro da tela
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+        if self.rect.left < 0:
+            self.rect.left = 0
+            
+#------------------------------------------------------------------------------------
+       
 class Rosa(pygame.sprite.Sprite):
     
     #Construtor da classe
@@ -233,24 +277,38 @@ background_rect = background.get_rect()
 player = Player()
 
 #cria dot rosa
-rosa = Rosa()
+#rosa = Rosa()
 
 #Cria DOT verde
-verde = Verde()
+#verde = Verde()
 
 #Cria DOT amarelo
-amarelo = Amarelo()
+#amarelo = Amarelo()
 
 # Cria o meteoro.
 meteoro = Mob()
 
 # Cria um grupo de sprites e adiciona a nave.
 all_sprites = pygame.sprite.Group()
+
+x = 25 
+y = HEIGHT-76
+
+for e in range(10):    
+    for i in range(10):
+        a1 = Bolinhas(x, y)
+        all_sprites.add(a1)
+        x += 76
+    y -= 76
+    x = 25
+    
+"""
 all_sprites.add(player)
 all_sprites.add(rosa)
 all_sprites.add(verde)
 all_sprites.add(amarelo)
 all_sprites.add(meteoro)
+"""
 
 # Cria um gruppo Mobs e Adiciona o meteoro.
 mobs = pygame.sprite.Group()
