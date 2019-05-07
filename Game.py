@@ -73,7 +73,7 @@ class Bolinhas(pygame.sprite.Sprite):
     
     #Construtor da classe
     def __init__(self, x, y):
-        cor = ["dot_rosa.png", "dot_amarelo.png"]
+        cor = ["dot_rosa.png", "dot_amarelo.png", "dot_verde.png", "dot_azul.png"]
         
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
