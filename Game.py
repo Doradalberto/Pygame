@@ -4,6 +4,8 @@ Created on Fri Apr 26 17:27:41 2019
 
 @author: dorad
 """
+#TESTE JOTIMBA
+
 
 # Importando as bibliotecas necessárias.
 import pygame
