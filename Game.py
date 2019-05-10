@@ -16,8 +16,8 @@ from os import path
 img_dir = path.join(path.dirname(__file__), 'Imagens')
 
 # Dados gerais do jogo.
-WIDTH = 800 # Largura da tela
-HEIGHT = 600 # Altura da tela
+WIDTH = 1200 # Largura da tela
+HEIGHT = 700 # Altura da tela
 FPS = 60 # Frames por segundo
 
 # Define algumas variáveis com as cores básicas
@@ -73,14 +73,14 @@ class Bolinhas(pygame.sprite.Sprite):
     
     #Construtor da classe
     def __init__(self, x, y):
-        cor = ["dot_rosa.png", "dot_amarelo.png", "dot_verde.png", "dot_azul.png"]
+        arq_cor = ["dot_rosa.png", "dot_amarelo.png", "dot_verde.png", "dot_azul.png"]
         
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
          
         # Carregando a imagem de fundo.
-        sorteio = random.randint(0,3)
-        player_img = pygame.image.load(path.join(img_dir, cor[sorteio])).convert()
+        self.cor = random.randint(0,3)
+        player_img = pygame.image.load(path.join(img_dir, arq_cor[self.cor])).convert()
 
         self.image = player_img
         
@@ -291,16 +291,23 @@ meteoro = Mob()
 # Cria um grupo de sprites e adiciona a nave.
 all_sprites = pygame.sprite.Group()
 
-x = 25 
-y = HEIGHT-76
+xinit = 225 
+yinit = HEIGHT-7*76
 
-for e in range(7):    
+x = xinit
+y = yinit
+tam_bolinha = 76
+tabuleiro_bolinha = []
+for e in range(7):
+    linha_bolinha = []
     for i in range(10):
         a1 = Bolinhas(x, y)
         all_sprites.add(a1)
-        x += 76
-    y -= 76
-    x = 25
+        linha_bolinha.append(a1)
+        x += tam_bolinha
+    tabuleiro_bolinha.append(linha_bolinha)
+    y += tam_bolinha
+    x = xinit
     
 """
 all_sprites.add(player)
@@ -314,6 +321,8 @@ all_sprites.add(meteoro)
 mobs = pygame.sprite.Group()
 mobs.add(meteoro)
 
+lista_bolinhas = []
+
 # Comando para evitar travamentos.
 try:
     
@@ -326,6 +335,23 @@ try:
         
         # Processa os eventos (mouse, teclado, botão, etc).
         for event in pygame.event.get():
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                xpos = event.pos[0]
+                ypos = event.pos[1]
+                j_bolinha = int((xpos - xinit)/tam_bolinha)
+                i_bolinha = int((ypos - yinit)/tam_bolinha)
+                cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
+                if len(lista_bolinhas) == 0:
+                    lista_bolinhas.append((i_bolinha, j_bolinha, cor))
+                else:
+                    ultima_bolinha = lista_bolinhas[-1]
+                    nova_bolinha = (i_bolinha, j_bolinha, cor)
+                    diferenca = (abs(ultima_bolinha[0] - i_bolinha), abs(ultima_bolinha[1] - j_bolinha))
+                    if diferenca in [(1, 0), (0, 1)] and ultima_bolinha[2] == cor and not nova_bolinha in lista_bolinhas:
+                        lista_bolinhas.append(nova_bolinha)
+                        
+                print(lista_bolinhas)
             
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
@@ -346,6 +372,8 @@ try:
                     player.speedx = 0
                 if event.key == pygame.K_RIGHT:
                     player.speedx = 0
+                    
+            
                     
         # Depois de processar os eventos.
         # Atualiza a ação de cada sprite.
