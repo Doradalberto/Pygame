@@ -77,7 +77,7 @@ class Bolinhas(pygame.sprite.Sprite):
         
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
-         
+        
         # Carregando a imagem de fundo.
         self.cor = random.randint(0,3)
         player_img = pygame.image.load(path.join(img_dir, arq_cor[self.cor])).convert()
@@ -85,7 +85,7 @@ class Bolinhas(pygame.sprite.Sprite):
         self.image = player_img
         
         # Diminuindoo tamanho da imagem.
-        self.image = pygame.transform.scale(player_img, (50, 50))
+        self.image = pygame.transform.scale(player_img, (60, 60))
         
         # Deixando transparente.
         self.image.set_colorkey(WHITE)
@@ -271,7 +271,13 @@ clock = pygame.time.Clock()
 
 # Carrega o fundo do jogo
 background = pygame.image.load(path.join(img_dir, 'fundo_cinza.png')).convert()
+background = pygame.transform.scale(background,(WIDTH, HEIGHT))
 background_rect = background.get_rect()
+
+#Carrega imagem quadrado
+quadrado = pygame.image.load(path.join(img_dir, 'quadrado_marrom.png')).convert()
+quadrado.set_colorkey(WHITE)
+quadrado = pygame.transform.scale(quadrado,(600, 600))
 
 # Cria uma nave.  construtor será chamado automaticamente.
 player = Player()
@@ -291,8 +297,8 @@ meteoro = Mob()
 # Cria um grupo de sprites e adiciona a nave.
 all_sprites = pygame.sprite.Group()
 
-xinit = 225 
-yinit = HEIGHT-7*76
+xinit = 345 
+yinit = HEIGHT-7*79
 
 x = xinit
 y = yinit
@@ -300,7 +306,7 @@ tam_bolinha = 76
 tabuleiro_bolinha = []
 for e in range(7):
     linha_bolinha = []
-    for i in range(10):
+    for i in range(7):
         a1 = Bolinhas(x, y)
         all_sprites.add(a1)
         linha_bolinha.append(a1)
@@ -308,6 +314,8 @@ for e in range(7):
     tabuleiro_bolinha.append(linha_bolinha)
     y += tam_bolinha
     x = xinit
+    
+    
     
 """
 all_sprites.add(player)
@@ -322,6 +330,7 @@ mobs = pygame.sprite.Group()
 mobs.add(meteoro)
 
 lista_bolinhas = []
+lista_sprites = []
 
 # Comando para evitar travamentos.
 try:
@@ -382,6 +391,7 @@ try:
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(BLACK)
         screen.blit(background, background_rect)
+        screen.blit(quadrado, [300, 100])
         all_sprites.draw(screen)
         
         # Depois de desenhar tudo, inverte o display.
