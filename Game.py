@@ -4,8 +4,12 @@ Created on Fri Apr 26 17:27:41 2019
 
 @author: dorad
 """
-#TESTE JOTIMBA
-#TESTE ALEKIS
+
+VERDE = (160, 231, 190)
+VERMELHO = (205, 44, 65)
+AZUL = (139, 165, 235)
+AMARELO = (204, 173, 26)
+
 
 # Importando as bibliotecas necessárias.
 import pygame
@@ -350,18 +354,22 @@ try:
                 ypos = event.pos[1]
                 j_bolinha = int((xpos - xinit)/tam_bolinha)
                 i_bolinha = int((ypos - yinit)/tam_bolinha)
-                cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
-                if len(lista_bolinhas) == 0:
-                    lista_bolinhas.append((i_bolinha, j_bolinha, cor))
-                else:
-                    ultima_bolinha = lista_bolinhas[-1]
-                    nova_bolinha = (i_bolinha, j_bolinha, cor)
-                    diferenca = (abs(ultima_bolinha[0] - i_bolinha), abs(ultima_bolinha[1] - j_bolinha))
-                    if diferenca in [(1, 0), (0, 1)] and ultima_bolinha[2] == cor and not nova_bolinha in lista_bolinhas:
-                        lista_bolinhas.append(nova_bolinha)
+                
+                if i_bolinha >= 0 and i_bolinha < 7 \
+                    and j_bolinha >= 0 and j_bolinha < 7:
+                    cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
+                    if len(lista_bolinhas) == 0:
+                        lista_bolinhas.append((i_bolinha, j_bolinha, cor, xpos,ypos))
                         
-                print(lista_bolinhas)
-            
+                        
+                    else:
+                        ultima_bolinha = lista_bolinhas[-1]
+                        nova_bolinha = (i_bolinha, j_bolinha, cor,xpos,ypos)
+                        diferenca = (abs(ultima_bolinha[0] - i_bolinha), abs(ultima_bolinha[1] - j_bolinha))
+                        if diferenca in [(1, 0), (0, 1)] and ultima_bolinha[2] == cor and not nova_bolinha in lista_bolinhas:
+                            lista_bolinhas.append(nova_bolinha)
+                            
+                        
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
                 running = False
@@ -381,9 +389,7 @@ try:
                     player.speedx = 0
                 if event.key == pygame.K_RIGHT:
                     player.speedx = 0
-                    
-            
-                    
+
         # Depois de processar os eventos.
         # Atualiza a ação de cada sprite.
         all_sprites.update()
@@ -394,6 +400,18 @@ try:
         screen.blit(quadrado, [300, 100])
         all_sprites.draw(screen)
         
+        for i in range(1, len(lista_bolinhas)):
+            ba = lista_bolinhas[i - 1]
+            bb = lista_bolinhas[i]
+            
+            xa = ba[1] * tam_bolinha + xinit
+            ya = ba[0] * tam_bolinha + yinit
+            
+            xb = bb[1] * tam_bolinha + xinit
+            yb = bb[0] * tam_bolinha + yinit
+            
+            pygame.draw.line(screen, BLACK, (xa, ya), (xb, yb), 10)
+
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
         
