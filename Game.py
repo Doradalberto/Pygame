@@ -405,11 +405,11 @@ try:
             ba = lista_bolinhas[i - 1]
             bb = lista_bolinhas[i]
             
-            xa = ba[1] * tam_bolinha + xinit
-            ya = ba[0] * tam_bolinha + yinit
+            xa = ba[1] * tam_bolinha + (xinit + 30.5)
+            ya = ba[0] * tam_bolinha + (yinit + 30.5)
             
-            xb = bb[1] * tam_bolinha + xinit
-            yb = bb[0] * tam_bolinha + yinit
+            xb = bb[1] * tam_bolinha + (xinit + 30.5)
+            yb = bb[0] * tam_bolinha + (yinit + 30.5)
             
             for g in LISTA_CORES:
                 if cor == 0:
@@ -420,7 +420,7 @@ try:
                     cor_usada = VERDE
                 else:
                     cor_usada = AZUL
-                
+
             pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 5)
 
         # Depois de desenhar tudo, inverte o display.
