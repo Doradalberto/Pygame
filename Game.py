@@ -9,6 +9,7 @@ VERDE = (160, 231, 190)
 VERMELHO = (205, 44, 65)
 AZUL = (139, 165, 235)
 AMARELO = (204, 173, 26)
+LISTA_CORES = [VERDE, VERMELHO, AZUL, AMARELO]
 
 
 # Importando as bibliotecas necessárias.
@@ -409,6 +410,16 @@ try:
             
             xb = bb[1] * tam_bolinha + (xinit + 30.5)
             yb = bb[0] * tam_bolinha + (yinit + 30.5)
+            
+            for g in LISTA_CORES:
+                if cor == 0:
+                   cor_usada = VERMELHO
+                elif cor == 1:
+                    cor_usada = AMARELO
+                elif cor == 2:
+                    cor_usada = VERDE
+                else:
+                    cor_usada = AZUL
             
             pygame.draw.line(screen, BLACK, (xa, ya), (xb, yb), 10)
 
