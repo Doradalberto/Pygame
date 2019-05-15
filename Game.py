@@ -369,7 +369,11 @@ try:
                         diferenca = (abs(ultima_bolinha[0] - i_bolinha), abs(ultima_bolinha[1] - j_bolinha))
                         if diferenca in [(1, 0), (0, 1)] and ultima_bolinha[2] == cor and not nova_bolinha in lista_bolinhas:
                             lista_bolinhas.append(nova_bolinha)
-                            
+                       
+                    #------------ DÚVIDAS NISSO --------------------------
+                if event.type == pygame.KEYDOWN:
+                    del(lista_bolinhas)
+                    del(player_img)
                         
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
@@ -421,7 +425,8 @@ try:
                 else:
                     cor_usada = AZUL
 
-            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 5)
+            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
+            
 
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
