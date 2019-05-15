@@ -9,7 +9,7 @@ VERDE = (160, 231, 190)
 VERMELHO = (205, 44, 65)
 AZUL = (139, 165, 235)
 AMARELO = (204, 173, 26)
-LISTA_CORES = [VERDE, VERMELHO, AZUL, AMARELO]
+LISTA_CORES=[VERDE, VERMELHO, AZUL, AMARELO]
 
 
 # Importando as bibliotecas necessárias.
@@ -369,7 +369,11 @@ try:
                         diferenca = (abs(ultima_bolinha[0] - i_bolinha), abs(ultima_bolinha[1] - j_bolinha))
                         if diferenca in [(1, 0), (0, 1)] and ultima_bolinha[2] == cor and not nova_bolinha in lista_bolinhas:
                             lista_bolinhas.append(nova_bolinha)
-                            
+                       
+                    #------------ DÚVIDAS NISSO --------------------------
+                if event.type == pygame.KEYDOWN:
+                    del(lista_bolinhas)
+                    del(player_img)
                         
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
@@ -420,9 +424,16 @@ try:
                     cor_usada = VERDE
                 else:
                     cor_usada = AZUL
+<<<<<<< HEAD
             
             pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
  
+=======
+
+            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
+            
+
+>>>>>>> ade4890c4aaa64f112c6004d7cd47f62f3b81a1d
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
         
