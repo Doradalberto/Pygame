@@ -426,10 +426,16 @@ try:
                     cor_usada = VERDE
                 else:
                     cor_usada = AZUL
+<<<<<<< HEAD
+            
+            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
+ 
+=======
 
             pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
             
 
+>>>>>>> ade4890c4aaa64f112c6004d7cd47f62f3b81a1d
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
         
