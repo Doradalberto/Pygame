@@ -166,7 +166,7 @@ try:
                                 lista_bolinhas.append(nova_bolinha)
 
                        
-                    #------------ DÚVIDAS NISSO --------------------------
+                    #DUVIDAS
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if len(lista_bolinhas) > 1:
