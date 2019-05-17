@@ -23,7 +23,7 @@ img_dir = path.join(path.dirname(__file__), 'Imagens')
 # Dados gerais do jogo.
 WIDTH = 1200 # Largura da tela
 HEIGHT = 700 # Altura da tela
-FPS = 10 # Frames por segundo
+FPS = 60 # Frames por segundo
 
 # Define algumas variáveis com as cores básicas
 WHITE = (255, 255, 255)
@@ -166,12 +166,8 @@ try:
                                 lista_bolinhas.append(nova_bolinha)
 
                        
-                    #DUVIDAS
+                    #------------ DÚVIDAS NISSO --------------------------
             if event.type == pygame.KEYDOWN:
-
-                #player_img.kill
-                del(player_img)
-
                 if event.key == pygame.K_SPACE:
                     if len(lista_bolinhas) > 1:
                         for b in lista_bolinhas:
@@ -180,7 +176,8 @@ try:
                             tabuleiro_bolinha[i_bolinha][j_bolinha].kill()
                             tabuleiro_bolinha[i_bolinha][j_bolinha] = None                            
                         lista_bolinhas = []
-                        cor = None                
+                        cor = None
+                
                         
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
