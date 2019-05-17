@@ -159,7 +159,8 @@ try:
                        
                     #------------ DÚVIDAS NISSO --------------------------
             if event.type == pygame.KEYDOWN:
-                player_img.kill
+                #player_img.kill
+                del(player_img)
                 
                         
             # Verifica se foi fechado
