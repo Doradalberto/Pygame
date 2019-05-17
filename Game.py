@@ -9,7 +9,7 @@ VERDE = (160, 231, 190)
 VERMELHO = (205, 44, 65)
 AZUL = (139, 165, 235)
 AMARELO = (204, 173, 26)
-LISTA_CORES=[VERDE, VERMELHO, AZUL, AMARELO]
+LISTA_CORES=[VERMELHO, AMARELO, VERDE, AZUL]
 
 
 # Importando as bibliotecas necessárias.
@@ -23,7 +23,7 @@ img_dir = path.join(path.dirname(__file__), 'Imagens')
 # Dados gerais do jogo.
 WIDTH = 1200 # Largura da tela
 HEIGHT = 700 # Altura da tela
-FPS = 60 # Frames por segundo
+FPS = 10 # Frames por segundo
 
 # Define algumas variáveis com as cores básicas
 WHITE = (255, 255, 255)
@@ -123,6 +123,7 @@ for e in range(7):
 
 lista_bolinhas = []
 lista_sprites = []
+cor = None
 
 # Comando para evitar travamentos.
 try:
@@ -144,23 +145,43 @@ try:
                 i_bolinha = int((ypos - yinit)/tam_bolinha)
                 
                 if i_bolinha >= 0 and i_bolinha < 7 \
-                    and j_bolinha >= 0 and j_bolinha < 7:
-                    cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
+                    and j_bolinha >= 0 and j_bolinha < 7 \
+                    and tabuleiro_bolinha[i_bolinha][j_bolinha]:
                     if len(lista_bolinhas) == 0:
+                        cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
                         lista_bolinhas.append((i_bolinha, j_bolinha, cor, xpos,ypos))
-                        
-                        
                     else:
-                        ultima_bolinha = lista_bolinhas[-1]
-                        nova_bolinha = (i_bolinha, j_bolinha, cor,xpos,ypos)
-                        diferenca = (abs(ultima_bolinha[0] - i_bolinha), abs(ultima_bolinha[1] - j_bolinha))
-                        if diferenca in [(1, 0), (0, 1)] and ultima_bolinha[2] == cor and not nova_bolinha in lista_bolinhas:
-                            lista_bolinhas.append(nova_bolinha)
+                        nova_cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
+
+                        if len(lista_bolinhas) == 1 and cor != nova_cor:
+                            lista_bolinhas = []
+                            cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
+                            lista_bolinhas.append((i_bolinha, j_bolinha, cor, xpos,ypos))
+                        else:
+                            nova_cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
+                            ultima_bolinha = lista_bolinhas[-1]
+                            nova_bolinha = (i_bolinha, j_bolinha, nova_cor, xpos, ypos)
+                            diferenca = (abs(ultima_bolinha[0] - i_bolinha), abs(ultima_bolinha[1] - j_bolinha))
+                            if diferenca in [(1, 0), (0, 1)] and ultima_bolinha[2] == nova_cor and not nova_bolinha in lista_bolinhas:
+                                lista_bolinhas.append(nova_bolinha)
+
                        
                     #------------ DÚVIDAS NISSO --------------------------
             if event.type == pygame.KEYDOWN:
+<<<<<<< HEAD
                 #player_img.kill
                 del(player_img)
+=======
+                if event.key == pygame.K_SPACE:
+                    if len(lista_bolinhas) > 1:
+                        for b in lista_bolinhas:
+                            i_bolinha = b[0]
+                            j_bolinha = b[1]
+                            tabuleiro_bolinha[i_bolinha][j_bolinha].kill()
+                            tabuleiro_bolinha[i_bolinha][j_bolinha] = None                            
+                        lista_bolinhas = []
+                        cor = None
+>>>>>>> 0366345a8e22a4ae76f7c9cbe7dca683c375c99b
                 
                         
             # Verifica se foi fechado
@@ -186,16 +207,8 @@ try:
             
             xb = bb[1] * tam_bolinha + (xinit + 30.5)
             yb = bb[0] * tam_bolinha + (yinit + 30.5)
-            
-            for g in LISTA_CORES:
-                if cor == 0:
-                   cor_usada = VERMELHO
-                elif cor == 1:
-                    cor_usada = AMARELO
-                elif cor == 2:
-                    cor_usada = VERDE
-                else:
-                    cor_usada = AZUL
+
+            cor_usada = LISTA_CORES[cor]
             
             pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)            
 
