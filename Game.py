@@ -158,15 +158,36 @@ try:
                             lista_bolinhas.append(nova_bolinha)
                        
                     #------------ DÚVIDAS NISSO --------------------------
-                if event.type == pygame.KEYDOWN:
-                    del(lista_bolinhas)
-                    del(player_img)
+            if event.type == pygame.KEYDOWN:
+                player_img.kill
+                
                         
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
                 running = False
                 
+<<<<<<< HEAD
            
+=======
+            # Verifica se apertou alguma tecla.
+            '''
+            if event.type == pygame.KEYDOWN:
+                # Dependendo da tecla, altera a velocidade.
+                if event.key == pygame.K_LEFT:
+                    player.speedx = -8
+                if event.key == pygame.K_RIGHT:
+                    player.speedx = 8
+            
+            # Verifica se soltou alguma tecla
+            if event.type == pygame.KEYUP:
+                # Dependendo da tecla, altera a velocidade.
+                if event.key == pygame.K_LEFT:
+                    player.speedx = 0
+                if event.key == pygame.K_RIGHT:
+                    player.speedx = 0
+                    '''
+
+>>>>>>> ab8ac42bb9ac7d10fcc96328886fcfcf45a8ed8f
         # Depois de processar os eventos.
         # Atualiza a ação de cada sprite.
         all_sprites.update()
