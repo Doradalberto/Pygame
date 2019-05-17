@@ -165,24 +165,6 @@ try:
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
                 running = False
-                
-            # Verifica se apertou alguma tecla.
-            '''
-            if event.type == pygame.KEYDOWN:
-                # Dependendo da tecla, altera a velocidade.
-                if event.key == pygame.K_LEFT:
-                    player.speedx = -8
-                if event.key == pygame.K_RIGHT:
-                    player.speedx = 8
-            
-            # Verifica se soltou alguma tecla
-            if event.type == pygame.KEYUP:
-                # Dependendo da tecla, altera a velocidade.
-                if event.key == pygame.K_LEFT:
-                    player.speedx = 0
-                if event.key == pygame.K_RIGHT:
-                    player.speedx = 0
-                    '''
 
         # Depois de processar os eventos.
         # Atualiza a ação de cada sprite.
@@ -214,15 +196,8 @@ try:
                 else:
                     cor_usada = AZUL
             
-            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
+            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)            
 
-            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
-            
-        # Depois de desenhar tudo, inverte o display. 
-
-
-            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
-            
  # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
         
