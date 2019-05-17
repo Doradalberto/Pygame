@@ -168,6 +168,10 @@ try:
                        
                     #DUVIDAS
             if event.type == pygame.KEYDOWN:
+<<<<<<< HEAD
+                #player_img.kill
+                del(player_img)
+=======
                 if event.key == pygame.K_SPACE:
                     if len(lista_bolinhas) > 1:
                         for b in lista_bolinhas:
@@ -177,6 +181,7 @@ try:
                             tabuleiro_bolinha[i_bolinha][j_bolinha] = None                            
                         lista_bolinhas = []
                         cor = None
+>>>>>>> 0366345a8e22a4ae76f7c9cbe7dca683c375c99b
                 
                         
             # Verifica se foi fechado
