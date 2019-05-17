@@ -166,7 +166,7 @@ try:
                                 lista_bolinhas.append(nova_bolinha)
 
                        
-                    #------------ DÚVIDAS NISSO --------------------------
+                    #DUVIDAS
             if event.type == pygame.KEYDOWN:
 
                 #player_img.kill
