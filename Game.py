@@ -5,6 +5,10 @@ Created on Fri Apr 26 17:27:41 2019
 @author: dorad
 """
 
+INIT = 0
+GAME = 1
+QUIT = 2
+
 VERDE = (160, 231, 190)
 VERMELHO = (205, 44, 65)
 AZUL = (139, 165, 235)
@@ -73,7 +77,7 @@ class Bolinhas(pygame.sprite.Sprite):
             self.rect.right = WIDTH
         if self.rect.left < 0:
             self.rect.left = 0
-            
+        
 
 # Inicialização do Pygame.
 pygame.init()
@@ -85,48 +89,53 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 # Nome do jogo
 pygame.display.set_caption("Pygame")
 
-# Variável para o ajuste de velocidade
-clock = pygame.time.Clock()
+def jogo(screen):
 
-# Carrega o fundo do jogo
-background = pygame.image.load(path.join(img_dir, 'fundo_cinza.png')).convert()
-background = pygame.transform.scale(background,(WIDTH, HEIGHT))
-background_rect = background.get_rect()
-
-#Carrega imagem quadrado
-quadrado = pygame.image.load(path.join(img_dir, 'quadrado_marrom.png')).convert()
-quadrado.set_colorkey(WHITE)
-quadrado = pygame.transform.scale(quadrado,(600, 600))
-
-
-# Cria um grupo de sprites e adiciona a nave.
-all_sprites = pygame.sprite.Group()
-
-xinit = 345 
-yinit = HEIGHT-7*79
-
-x = xinit
-y = yinit
-tam_bolinha = 76
-tabuleiro_bolinha = []
-for e in range(7):
-    linha_bolinha = []
-    for i in range(7):
-        a1 = Bolinhas(x, y)
-        all_sprites.add(a1)
-        linha_bolinha.append(a1)
-        x += tam_bolinha
-    tabuleiro_bolinha.append(linha_bolinha)
-    y += tam_bolinha
-    x = xinit
+    # Variável para o ajuste de velocidade
+    clock = pygame.time.Clock()
     
-
-lista_bolinhas = []
-lista_sprites = []
-cor = None
-
-# Comando para evitar travamentos.
-try:
+    # Carrega o fundo do jogo
+    inicio = pygame.image.load(path.join(img_dir, 'entrada.png')).convert()
+    inicio = pygame.transform.scale(inicio,(WIDTH, HEIGHT))
+    inicio_rect = inicio.get_rect()
+    
+    background = pygame.image.load(path.join(img_dir, 'fundo_cinza.png')).convert()
+    background = pygame.transform.scale(background,(WIDTH, HEIGHT))
+    background_rect = background.get_rect()
+    
+    #Carrega imagem quadrado
+    quadrado = pygame.image.load(path.join(img_dir, 'quadrado_marrom.png')).convert()
+    quadrado.set_colorkey(WHITE)
+    quadrado = pygame.transform.scale(quadrado,(600, 600))
+    
+    
+    # Cria um grupo de sprites e adiciona a nave.
+    all_sprites = pygame.sprite.Group()
+    
+    xinit = 345 
+    yinit = HEIGHT-7*79
+    
+    x = xinit
+    y = yinit
+    tam_bolinha = 76
+    tabuleiro_bolinha = []
+    for e in range(7):
+        linha_bolinha = []
+        for i in range(7):
+            a1 = Bolinhas(x, y)
+            all_sprites.add(a1)
+            linha_bolinha.append(a1)
+            x += tam_bolinha
+        tabuleiro_bolinha.append(linha_bolinha)
+        y += tam_bolinha
+        x = xinit
+        
+    
+    lista_bolinhas = []
+    lista_sprites = []
+    cor = None
+    
+    # Comando para evitar travamentos.
     
     # Loop principal.
     running = True
@@ -166,7 +175,6 @@ try:
                                 lista_bolinhas.append(nova_bolinha)
 
                        
-                    #------------ DÚVIDAS NISSO --------------------------
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if len(lista_bolinhas) > 1:
@@ -182,6 +190,23 @@ try:
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
                 running = False
+
+        for j in range(7):
+            p = 6
+            q = 6
+            while p >= 0:
+                if tabuleiro_bolinha[p][j] != None:
+                    tabuleiro_bolinha[q][j] = tabuleiro_bolinha[p][j]
+                    tabuleiro_bolinha[q][j].rect.x = xinit + j*tam_bolinha
+                    tabuleiro_bolinha[q][j].rect.y = yinit + q*tam_bolinha
+                    q -= 1
+                p -= 1
+            while q >= 0:
+                a1 = Bolinhas(xinit + j*tam_bolinha, yinit + q*tam_bolinha)
+                all_sprites.add(a1)
+                tabuleiro_bolinha[q][j] = a1
+                q -= 1
+                
 
         # Depois de processar os eventos.
         # Atualiza a ação de cada sprite.
@@ -209,6 +234,66 @@ try:
 
  # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
+    return QUIT
+
+
+def init_screen(screen):
+    # Variável para o ajuste de velocidade
+    clock = pygame.time.Clock()
+
+    # Carrega o fundo da tela inicial
+    background = pygame.image.load(path.join(img_dir, 'entrada.png')).convert()
+    background_rect = background.get_rect()
+
+    running = True
+    while running:
         
+        # Ajusta a velocidade do jogo.
+        clock.tick(FPS)
+        
+        # Processa os eventos (mouse, teclado, botão, etc).
+        for event in pygame.event.get():
+            # Verifica se foi fechado.
+            if event.type == pygame.QUIT:
+                state = QUIT
+                running = False
+
+            if event.type == pygame.KEYUP:
+                state = GAME
+                running = False
+                
+            if pygame.mouse.get_pressed()[0]:
+                
+                #Pega a posição do click
+                x,y = pygame.mouse.get_pos()
+                if (x > 405 and y > 285) or (x > 405 and y < 434) or (x < 770 and y < 434) or (x < 770 and y > 285):
+                     state = GAME
+                     running = False
+
+                print("click {0},{1}".format(x,y))
+                
+        # A cada loop, redesenha o fundo e os sprites
+        screen.fill(BLACK)
+        screen.blit(background, background_rect)
+
+        # Depois de desenhar tudo, inverte o display.
+        pygame.display.flip()
+
+    return state
+
+
+
+
+try:
+    state = INIT
+    while state != QUIT:
+        if state == INIT:
+            state = init_screen(screen)
+        elif state == GAME:
+            state = jogo(screen)
+        else:
+            state = QUIT
 finally:
     pygame.quit()
+
+
