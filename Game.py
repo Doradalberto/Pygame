@@ -7,6 +7,7 @@ Created on Fri Apr 26 17:27:41 2019
 
 INIT = 0
 GAME = 1
+INSTRUCOES = 31
 QUIT = 2
 
 VERDE = (160, 231, 190)
@@ -23,6 +24,7 @@ from os import path
 
 # Estabelece a pasta que contem as figuras.
 img_dir = path.join(path.dirname(__file__), 'Imagens')
+fnt_dir = path.join(path.dirname(__file__), 'Fonte')
 
 # Dados gerais do jogo.
 WIDTH = 1200 # Largura da tela
@@ -90,7 +92,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pygame")
 
 def jogo(screen):
-
+    score_fonte = pygame.font.Font(path.join(fnt_dir, "DK Lemon Yellow Sun.otf"), 28)
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
     
@@ -230,7 +232,13 @@ def jogo(screen):
 
             cor_usada = LISTA_CORES[cor]
             
-            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)            
+            pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
+        
+        text_surface = score_fonte.render("hello world", True, YELLOW)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (WIDTH / 2,  10)
+        screen.blit(text_surface, text_rect)
+
 
  # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
@@ -266,7 +274,56 @@ def init_screen(screen):
                 
                 #Pega a posição do click
                 x,y = pygame.mouse.get_pos()
-                if (x > 405 and y > 285) or (x > 405 and y < 434) or (x < 770 and y < 434) or (x < 770 and y > 285):
+                if (x > 405 and y > 285) and (x > 405 and y < 434) and (x < 770 and y < 434) and (x < 770 and y > 285):
+                     state = GAME
+                     running = False
+                elif (x > 405 and y > 484) and (x > 405 and y < 622) and (x < 747 and y < 629) and (x < 741 and y > 475):
+                     state = INSTRUCOES
+                     running = False
+
+
+                print("click {0},{1}".format(x,y))
+                
+        # A cada loop, redesenha o fundo e os sprites
+        screen.fill(BLACK)
+        screen.blit(background, background_rect)
+
+        # Depois de desenhar tudo, inverte o display.
+        pygame.display.flip()
+
+    return state
+
+
+def inst(screen):
+    # Variável para o ajuste de velocidade
+    clock = pygame.time.Clock()
+
+    # Carrega o fundo da tela inicial
+    background = pygame.image.load(path.join(img_dir, 'instrucoes.png')).convert()
+    background_rect = background.get_rect()
+
+    running = True
+    while running:
+        
+        # Ajusta a velocidade do jogo.
+        clock.tick(FPS)
+        
+        # Processa os eventos (mouse, teclado, botão, etc).
+        for event in pygame.event.get():
+            # Verifica se foi fechado.
+            if event.type == pygame.QUIT:
+                state = QUIT
+                running = False
+
+            if event.type == pygame.KEYUP:
+                state = GAME
+                running = False
+                
+            if pygame.mouse.get_pressed()[0]:
+                
+                #Pega a posição do click                    
+                x,y = pygame.mouse.get_pos()
+                if (x > 885 and y > 576) and (x > 893 and y < 662) and (x < 1117 and y < 668) and (x < 1114 and y > 571):
                      state = GAME
                      running = False
 
@@ -281,9 +338,6 @@ def init_screen(screen):
 
     return state
 
-
-
-
 try:
     state = INIT
     while state != QUIT:
@@ -291,6 +345,8 @@ try:
             state = init_screen(screen)
         elif state == GAME:
             state = jogo(screen)
+        elif state == INSTRUCOES:
+            state = inst(screen)
         else:
             state = QUIT
 finally:
