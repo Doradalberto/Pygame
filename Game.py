@@ -137,7 +137,8 @@ def jogo(screen):
     lista_sprites = []
     cor = None
     
-    # Comando para evitar travamentos.
+    jogadas = 5
+    jogadas_amarelas = 0
     
     # Loop principal.
     running = True
@@ -175,19 +176,24 @@ def jogo(screen):
                             diferenca = (abs(ultima_bolinha[0] - i_bolinha), abs(ultima_bolinha[1] - j_bolinha))
                             if diferenca in [(1, 0), (0, 1)] and ultima_bolinha[2] == nova_cor and not nova_bolinha in lista_bolinhas:
                                 lista_bolinhas.append(nova_bolinha)
-
+                    
                        
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if len(lista_bolinhas) > 1:
+                        if cor == 1:
+                            jogadas_amarelas += len(lista_bolinhas)
                         for b in lista_bolinhas:
                             i_bolinha = b[0]
                             j_bolinha = b[1]
                             tabuleiro_bolinha[i_bolinha][j_bolinha].kill()
                             tabuleiro_bolinha[i_bolinha][j_bolinha] = None                            
                         lista_bolinhas = []
+                        jogadas -= 1
                         cor = None
-                
+                        if jogadas == 0:
+                            running = False
+                        
                         
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
@@ -234,11 +240,21 @@ def jogo(screen):
             
             pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
         
-        text_surface = score_fonte.render("hello world", True, YELLOW)
+        text_surface = score_fonte.render("Eliminar 10 bolinhas amarelas em 5 jogadas", True, BLACK)
         text_rect = text_surface.get_rect()
-        text_rect.midtop = (WIDTH / 2,  10)
+        text_rect.midtop = (WIDTH/2,  20)
         screen.blit(text_surface, text_rect)
 
+        text_surface = score_fonte.render(f"SCORE: {jogadas_amarelas}", True, BLACK)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (WIDTH-110,  110)
+        screen.blit(text_surface, text_rect)
+
+        text_surface = score_fonte.render(f"JOGADAS: {jogadas}", True, BLACK)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (WIDTH-105, 150)
+        screen.blit(text_surface, text_rect)
+        
 
  # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
