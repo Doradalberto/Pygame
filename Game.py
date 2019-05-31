@@ -7,8 +7,8 @@ Created on Fri Apr 26 17:27:41 2019
 
 INIT = 0
 GAME = 1
-INSTRUCOES = 31
-QUIT = 2
+INSTRUCOES = 2
+QUIT = 3
 
 VERDE = (160, 231, 190)
 VERMELHO = (205, 44, 65)
@@ -92,9 +92,29 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pygame")
 
 def jogo(screen):
+    jogadas_totais = []
+    jogadas_totais.append({"jogada": 5, "cor" :[0, 5, 0, 0]})
+    jogadas_totais.append({"jogada": 5, "cor" :[5, 0, 0, 5]})
+
+    for contador_fase, params in enumerate(jogadas_totais):
+        res = fase_1(screen, contador_fase + 1)
+        if res == QUIT:
+            break
+        
+        res = fase(screen, params["jogada"], params["cor"])
+        if res == QUIT:
+            break
+        
+    return QUIT
+
+def fase(screen, qtd_jogadas, cores):
+    scores = [0, 0, 0, 0]
+    
     score_fonte = pygame.font.Font(path.join(fnt_dir, "DK Lemon Yellow Sun.otf"), 28)
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
+    
+    nome_cores = ["rosa", "amarelo", "verde", "azul"]
     
     # Carrega o fundo do jogo
     inicio = pygame.image.load(path.join(img_dir, 'entrada.png')).convert()
@@ -137,7 +157,7 @@ def jogo(screen):
     lista_sprites = []
     cor = None
     
-    jogadas = 5
+    jogadas = qtd_jogadas
     jogadas_amarelas = 0
     
     # Loop principal.
@@ -181,8 +201,7 @@ def jogo(screen):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if len(lista_bolinhas) > 1:
-                        if cor == 1:
-                            jogadas_amarelas += len(lista_bolinhas)
+                        scores[cor] += len(lista_bolinhas)
                         for b in lista_bolinhas:
                             i_bolinha = b[0]
                             j_bolinha = b[1]
@@ -239,8 +258,8 @@ def jogo(screen):
             cor_usada = LISTA_CORES[cor]
             
             pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
-        
-        text_surface = score_fonte.render("Eliminar 10 bolinhas amarelas em 5 jogadas", True, BLACK)
+                    
+        text_surface = score_fonte.render(f"Eliminar bolinhas em {jogadas} jogadas ", True, BLACK)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (WIDTH/2,  20)
         screen.blit(text_surface, text_rect)
@@ -255,9 +274,26 @@ def jogo(screen):
         text_rect.midtop = (WIDTH-105, 150)
         screen.blit(text_surface, text_rect)
         
-
- # Depois de desenhar tudo, inverte o display.
+        # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
+
+        # Monta o score.
+        jogadas_amarelas = 0
+        for k in range(len(cores)):
+            if scores[k] <= cores[k]:
+                jogadas_amarelas += scores[k]
+            else:
+                jogadas_amarelas += cores[k]
+        
+        # Checa se o objetivo foi atingido:
+        venci = True
+        for k in range(len(cores)):
+            if scores[k] < cores[k]:
+                venci = False
+        
+        if venci:
+            return tela # XXX Mudar isso!
+        
     return QUIT
 
 
@@ -330,17 +366,13 @@ def inst(screen):
             if event.type == pygame.QUIT:
                 state = QUIT
                 running = False
-
-            if event.type == pygame.KEYUP:
-                state = GAME
-                running = False
                 
             if pygame.mouse.get_pressed()[0]:
                 
                 #Pega a posição do click                    
                 x,y = pygame.mouse.get_pos()
                 if (x > 885 and y > 576) and (x > 893 and y < 662) and (x < 1117 and y < 668) and (x < 1114 and y > 571):
-                     state = GAME
+                     state = FASE1
                      running = False
 
                 print("click {0},{1}".format(x,y))
@@ -353,6 +385,43 @@ def inst(screen):
         pygame.display.flip()
 
     return state
+
+def fase_1(screen, numero_fases):
+    # Variável para o ajuste de velocidade
+    clock = pygame.time.Clock()
+
+    # Carrega o fundo da tela inicial
+    tela = "fase{0}.png".format(numero_fases)
+    background = pygame.image.load(path.join(img_dir, tela)).convert()
+    background_rect = background.get_rect()
+
+    running = True
+    while running:
+        
+        # Ajusta a velocidade do jogo.
+        clock.tick(FPS)
+        
+        # Processa os eventos (mouse, teclado, botão, etc).
+        for event in pygame.event.get():
+            # Verifica se foi fechado.
+            if event.type == pygame.QUIT:
+                state = QUIT
+                running = False
+                
+            if pygame.mouse.get_pressed()[0]:
+                x,y = pygame.mouse.get_pos()
+                if (x > 885 and y > 576) and (x > 893 and y < 662) and (x < 1117 and y < 668) and (x < 1114 and y > 571):
+                    state = GAME
+                    running = False
+                    
+        screen.fill(BLACK)
+        screen.blit(background, background_rect)
+
+        # Depois de desenhar tudo, inverte o display.
+        pygame.display.flip()
+
+    return state
+
 
 try:
     state = INIT
