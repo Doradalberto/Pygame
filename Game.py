@@ -206,7 +206,7 @@ def fase(screen, qtd_jogadas, cores):
                                 lista_bolinhas.append(nova_bolinha)
                     print(lista_bolinhas)
                        
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if len(lista_bolinhas) > 1:
                         scores[cor] += len(lista_bolinhas)
@@ -220,8 +220,7 @@ def fase(screen, qtd_jogadas, cores):
                         cor = None
                         if jogadas == 0:
                             running = False
-                        
-                        
+               
             # Verifica se foi fechado
             if event.type == pygame.QUIT:
                 running = False
@@ -242,7 +241,7 @@ def fase(screen, qtd_jogadas, cores):
                 tabuleiro_bolinha[q][j] = a1
                 q -= 1
                 
-
+        
         # Depois de processar os eventos.
         # Atualiza a ação de cada sprite.
         all_sprites.update()
@@ -298,33 +297,38 @@ def fase(screen, qtd_jogadas, cores):
         pygame.display.flip()
 
         # Monta o score.
-        jogadas_amarelas = 0
-        for amarelo in range(len(cores)):
-            if scores[amarelo] <= cores[amarelo]:
-                jogadas_amarelas += scores[amarelo]
-            else:
-                jogadas_amarelas += cores[amarelo]
-        
-        jogadas_rosas = 0
-        for rosa in range(len(cores)):
-            if scores[rosa] <= cores[rosa]:
-                jogadas_rosas += scores[rosa]
-            else:
-                jogadas_rosas += cores[rosa]
+        if cor == 0:
+            jogadas_rosas = 0
+            for rosa in range(len(cores)):
+                if scores[0] <= cores[rosa]:
+                    jogadas_rosas += scores[0]
+                else:
+                    jogadas_rosas += cores[rosa]
+                    
+        if cor == 1:
+            jogadas_amarelas = 0
+            for amarelo in range(len(cores)):
+                if scores[1] <= cores[amarelo]:
+                    jogadas_amarelas += scores[1]
+                else:
+                    jogadas_amarelas += cores[amarelo]
+            
+        if cor == 2:
+            jogadas_verdes = 0
+            for verde in range(len(cores)):
+                if scores[2] <= cores[verde]:
+                    jogadas_verdes += scores[2]
+                else:
+                    jogadas_verdes += cores[verde]
+                    
+        if cor == 3:
+            jogadas_azuis = 0
+            for azul in range(len(cores)):
+                if scores[3] <= cores[azul]:
+                    jogadas_azuis += scores[3]
+                else:
+                    jogadas_azuis += cores[azul]
                 
-        jogadas_azuis = 0
-        for azul in range(len(cores)):
-            if scores[azul] <= cores[azul]:
-                jogadas_azuis += scores[azul]
-            else:
-                jogadas_azuis += cores[azul]
-                
-        jogadas_verdes = 0
-        for verde in range(len(cores)):
-            if scores[verde] <= cores[verde]:
-                jogadas_verdes += scores[verde]
-            else:
-                jogadas_verdes += cores[verde]
                 
         # Checa se o objetivo foi atingido:
         venci = True
