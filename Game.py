@@ -94,10 +94,13 @@ pygame.display.set_caption("Pygame")
 def jogo(screen):
     jogadas_totais = []
     jogadas_totais.append({"jogada": 5, "cor" :[0, 5, 0, 0]})
-    jogadas_totais.append({"jogada": 5, "cor" :[5, 0, 0, 5]})
+    jogadas_totais.append({"jogada": 5, "cor" :[2, 0, 0, 2]})
+    jogadas_totais.append({"jogada": 15, "cor" :[2, 2, 2, 0]})
+    jogadas_totais.append({"jogada": 10, "cor" :[2, 2, 2, 2]})
+    jogadas_totais.append({"jogada": 5, "cor" :[2, 0, 0, 0]})
 
     for contador_fase, params in enumerate(jogadas_totais):
-        res = fase_1(screen, contador_fase + 1)
+        res = qual_fase(screen, contador_fase + 1)
         if res == QUIT:
             break
         
@@ -114,7 +117,6 @@ def fase(screen, qtd_jogadas, cores):
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
     
-    nome_cores = ["rosa", "amarelo", "verde", "azul"]
     
     # Carrega o fundo do jogo
     inicio = pygame.image.load(path.join(img_dir, 'entrada.png')).convert()
@@ -154,7 +156,6 @@ def fase(screen, qtd_jogadas, cores):
         
     
     lista_bolinhas = []
-    lista_sprites = []
     cor = None
     
     jogadas = qtd_jogadas
@@ -188,7 +189,8 @@ def fase(screen, qtd_jogadas, cores):
                         if len(lista_bolinhas) == 1 and cor != nova_cor:
                             lista_bolinhas = []
                             cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
-                            lista_bolinhas.append((i_bolinha, j_bolinha, cor, xpos,ypos))
+                            if e not in lista_bolinhas:
+                                lista_bolinhas.append((i_bolinha, j_bolinha, cor, xpos,ypos))
                         else:
                             nova_cor = tabuleiro_bolinha[i_bolinha][j_bolinha].cor
                             ultima_bolinha = lista_bolinhas[-1]
@@ -196,7 +198,7 @@ def fase(screen, qtd_jogadas, cores):
                             diferenca = (abs(ultima_bolinha[0] - i_bolinha), abs(ultima_bolinha[1] - j_bolinha))
                             if diferenca in [(1, 0), (0, 1)] and ultima_bolinha[2] == nova_cor and not nova_bolinha in lista_bolinhas:
                                 lista_bolinhas.append(nova_bolinha)
-                    
+                    print(lista_bolinhas)
                        
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -259,11 +261,7 @@ def fase(screen, qtd_jogadas, cores):
             
             pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
                     
-        text_surface = score_fonte.render(f"Eliminar bolinhas em {jogadas} jogadas ", True, BLACK)
-        text_rect = text_surface.get_rect()
-        text_rect.midtop = (WIDTH/2,  20)
-        screen.blit(text_surface, text_rect)
-
+      
         text_surface = score_fonte.render(f"SCORE: {jogadas_amarelas}", True, BLACK)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (WIDTH-110,  110)
@@ -292,7 +290,7 @@ def fase(screen, qtd_jogadas, cores):
                 venci = False
         
         if venci:
-            return tela # XXX Mudar isso!
+            return screen # XXX Mudar isso!
         
     return QUIT
 
@@ -386,9 +384,9 @@ def inst(screen):
 
     return state
 
-def fase_1(screen, numero_fases):
+def qual_fase(screen, numero_fases):
     # Variável para o ajuste de velocidade
-    clock = pygame.time.Clock()
+    clock = p.time.Clock()
 
     # Carrega o fundo da tela inicial
     tela = "fase{0}.png".format(numero_fases)
