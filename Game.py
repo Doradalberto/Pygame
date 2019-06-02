@@ -9,6 +9,8 @@ INIT = 0
 GAME = 1
 INSTRUCOES = 2
 QUIT = 3
+VENCEU = 4
+PERDEU = 5
 
 VERDE = (160, 231, 190)
 VERMELHO = (205, 44, 65)
@@ -45,6 +47,8 @@ class Bolinhas(pygame.sprite.Sprite):
     #Construtor da classe
     def __init__(self, x, y):
         arq_cor = ["dot_rosa.png", "dot_amarelo.png", "dot_verde.png", "dot_azul.png"]
+        
+        cores = ["rosa", "amarelo", "verde", "azul"]
         
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
@@ -94,7 +98,7 @@ pygame.display.set_caption("Pygame")
 def jogo(screen):
     jogadas_totais = []
     jogadas_totais.append({"jogada": 5, "cor" :[0, 5, 0, 0]})
-    jogadas_totais.append({"jogada": 5, "cor" :[2, 0, 0, 2]})
+    jogadas_totais.append({"jogada": 5, "cor" :[3, 0, 0, 3]})
     jogadas_totais.append({"jogada": 15, "cor" :[2, 2, 2, 0]})
     jogadas_totais.append({"jogada": 10, "cor" :[2, 2, 2, 2]})
     jogadas_totais.append({"jogada": 5, "cor" :[2, 0, 0, 0]})
@@ -132,7 +136,6 @@ def fase(screen, qtd_jogadas, cores):
     quadrado.set_colorkey(WHITE)
     quadrado = pygame.transform.scale(quadrado,(600, 600))
     
-    
     # Cria um grupo de sprites e adiciona a nave.
     all_sprites = pygame.sprite.Group()
     
@@ -160,6 +163,9 @@ def fase(screen, qtd_jogadas, cores):
     
     jogadas = qtd_jogadas
     jogadas_amarelas = 0
+    jogadas_azuis = 0
+    jogadas_rosas = 0
+    jogadas_verdes = 0
     
     # Loop principal.
     running = True
@@ -262,27 +268,64 @@ def fase(screen, qtd_jogadas, cores):
             pygame.draw.line(screen, cor_usada, (xa, ya), (xb, yb), 10)
                     
       
-        text_surface = score_fonte.render(f"SCORE: {jogadas_amarelas}", True, BLACK)
+        text_surface = score_fonte.render(f"SCORE AMARELO: {jogadas_amarelas}", True, BLACK)
         text_rect = text_surface.get_rect()
-        text_rect.midtop = (WIDTH-110,  110)
+        text_rect.midtop = (WIDTH-120,  110)
+        screen.blit(text_surface, text_rect)
+
+        text_surface = score_fonte.render(f"SCORE AZUL: {jogadas_azuis}", True, BLACK)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (WIDTH-135,  150)
+        screen.blit(text_surface, text_rect)
+        
+        text_surface = score_fonte.render(f"SCORE ROSA: {jogadas_rosas}", True, BLACK)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (WIDTH-136,  190)
+        screen.blit(text_surface, text_rect)
+        
+        text_surface = score_fonte.render(f"SCORE VERDE: {jogadas_verdes}", True, BLACK)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (WIDTH-132, 230)
         screen.blit(text_surface, text_rect)
 
         text_surface = score_fonte.render(f"JOGADAS: {jogadas}", True, BLACK)
         text_rect = text_surface.get_rect()
-        text_rect.midtop = (WIDTH-105, 150)
+        text_rect.midtop = (WIDTH-152, 270)
         screen.blit(text_surface, text_rect)
+        
         
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
 
         # Monta o score.
         jogadas_amarelas = 0
-        for k in range(len(cores)):
-            if scores[k] <= cores[k]:
-                jogadas_amarelas += scores[k]
+        for amarelo in range(len(cores)):
+            if scores[amarelo] <= cores[amarelo]:
+                jogadas_amarelas += scores[amarelo]
             else:
-                jogadas_amarelas += cores[k]
+                jogadas_amarelas += cores[amarelo]
         
+        jogadas_rosas = 0
+        for rosa in range(len(cores)):
+            if scores[rosa] <= cores[rosa]:
+                jogadas_rosas += scores[rosa]
+            else:
+                jogadas_rosas += cores[rosa]
+                
+        jogadas_azuis = 0
+        for azul in range(len(cores)):
+            if scores[azul] <= cores[azul]:
+                jogadas_azuis += scores[azul]
+            else:
+                jogadas_azuis += cores[azul]
+                
+        jogadas_verdes = 0
+        for verde in range(len(cores)):
+            if scores[verde] <= cores[verde]:
+                jogadas_verdes += scores[verde]
+            else:
+                jogadas_verdes += cores[verde]
+                
         # Checa se o objetivo foi atingido:
         venci = True
         for k in range(len(cores)):
@@ -290,7 +333,8 @@ def fase(screen, qtd_jogadas, cores):
                 venci = False
         
         if venci:
-            return screen # XXX Mudar isso!
+            return screen
+            
         
     return QUIT
 
@@ -344,6 +388,102 @@ def init_screen(screen):
     return state
 
 
+def lose(screen):
+    # Variável para o ajuste de velocidade
+    clock = pygame.time.Clock()
+
+    # Carrega o fundo da tela inicial
+    background = pygame.image.load(path.join(img_dir, 'perdeu.png')).convert()
+    background_rect = background.get_rect()
+
+    running = True
+    while running:
+        
+        # Ajusta a velocidade do jogo.
+        clock.tick(FPS)
+        
+        # Processa os eventos (mouse, teclado, botão, etc).
+        for event in pygame.event.get():
+            # Verifica se foi fechado.
+            if event.type == pygame.QUIT:
+                state = QUIT
+                running = False
+
+            if event.type == pygame.KEYUP:
+                state = QUIT
+                running = False
+                
+            if pygame.mouse.get_pressed()[0]:
+                
+                #Pega a posição do click
+                x,y = pygame.mouse.get_pos()
+                if (x > 405 and y > 285) and (x > 405 and y < 434) and (x < 770 and y < 434) and (x < 770 and y > 285):
+                     state = INIT
+                     running = False
+                elif (x > 405 and y > 484) and (x > 405 and y < 622) and (x < 747 and y < 629) and (x < 741 and y > 475):
+                     state = QUIT
+                     running = False
+
+
+                print("click {0},{1}".format(x,y))
+                
+        # A cada loop, redesenha o fundo e os sprites
+        screen.fill(BLACK)
+        screen.blit(background, background_rect)
+
+        # Depois de desenhar tudo, inverte o display.
+        pygame.display.flip()
+
+    return state
+
+def win(screen):
+    # Variável para o ajuste de velocidade
+    clock = pygame.time.Clock()
+
+    # Carrega o fundo da tela inicial
+    background = pygame.image.load(path.join(img_dir, 'venceu.png')).convert()
+    background_rect = background.get_rect()
+
+    running = True
+    while running:
+        
+        # Ajusta a velocidade do jogo.
+        clock.tick(FPS)
+        
+        # Processa os eventos (mouse, teclado, botão, etc).
+        for event in pygame.event.get():
+            # Verifica se foi fechado.
+            if event.type == pygame.QUIT:
+                state = QUIT
+                running = False
+
+            if event.type == pygame.KEYUP:
+                state = QUIT
+                running = False
+                
+            if pygame.mouse.get_pressed()[0]:
+                
+                #Pega a posição do click
+                x,y = pygame.mouse.get_pos()
+                if (x > 405 and y > 285) and (x > 405 and y < 434) and (x < 770 and y < 434) and (x < 770 and y > 285):
+                     state = INIT
+                     running = False
+                elif (x > 405 and y > 484) and (x > 405 and y < 622) and (x < 747 and y < 629) and (x < 741 and y > 475):
+                     state = QUIT
+                     running = False
+
+
+                print("click {0},{1}".format(x,y))
+                
+        # A cada loop, redesenha o fundo e os sprites
+        screen.fill(BLACK)
+        screen.blit(background, background_rect)
+
+        # Depois de desenhar tudo, inverte o display.
+        pygame.display.flip()
+
+    return state
+
 def inst(screen):
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
@@ -370,7 +510,7 @@ def inst(screen):
                 #Pega a posição do click                    
                 x,y = pygame.mouse.get_pos()
                 if (x > 885 and y > 576) and (x > 893 and y < 662) and (x < 1117 and y < 668) and (x < 1114 and y > 571):
-                     state = FASE1
+                     state = GAME
                      running = False
 
                 print("click {0},{1}".format(x,y))
@@ -386,7 +526,6 @@ def inst(screen):
 
 def qual_fase(screen, numero_fases):
     # Variável para o ajuste de velocidade
-    clock = p.time.Clock()
 
     # Carrega o fundo da tela inicial
     tela = "fase{0}.png".format(numero_fases)
@@ -395,9 +534,6 @@ def qual_fase(screen, numero_fases):
 
     running = True
     while running:
-        
-        # Ajusta a velocidade do jogo.
-        clock.tick(FPS)
         
         # Processa os eventos (mouse, teclado, botão, etc).
         for event in pygame.event.get():
@@ -430,6 +566,10 @@ try:
             state = jogo(screen)
         elif state == INSTRUCOES:
             state = inst(screen)
+        elif state == VENCEU:
+            state = win(screen)
+        elif state == PERDEU:
+            state = lose(screen)
         else:
             state = QUIT
 finally:
